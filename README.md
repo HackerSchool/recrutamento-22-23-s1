@@ -12,3 +12,5 @@ Lecturers: Ricardo Antunes, João Barreiros C. Rodrigues, Nuno G. Tribolet de Ab
 
 # App Development
 Lecturer: Filipe Varela
+
+testeTESTE

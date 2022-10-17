@@ -8,12 +8,12 @@ https://docs.google.com/presentation/d/1yRJYMwdAZpFP8tXmBeAaJEbuIqNmEUDOnTKcIY_2
 3. Se a decisao for para continuar deve-se perguntar quantos créditos vao ser apostados(se nao houver créditos suficientes o jogador e informado e repete-se a pergunta)
 4. Uma Rodada consiste em gerar 3 simbolos de um conjunto de 7 símbolos(há vossa escolha) 
 5. Os simbolos devem ter as seguintes probabilidades
-    50% simbolo 1
-    40% simbolo 2
-    30% simbolo 3
-    20% simbolo 4
-    10% simbolo 5
-    5% simbolo 6
+    40% simbolo 1
+    25% simbolo 2
+    15% simbolo 3
+    10% simbolo 4
+    5% simbolo 5
+    4% simbolo 6
     1% simbolo 7
 6. Se os 3 símbolos forem iguais então o utilizador ganha créditos em função da sua aposta e do simbolo
     5*aposta simbolo 1

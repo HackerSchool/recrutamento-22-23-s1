@@ -1,0 +1,111 @@
+html {
+  /* NORD THEME VARIABLES - https://www.nordtheme.com/docs/colors-and-palettes */
+  /* polar night */
+  --nord0: #2e3440;
+  --nord1: #3b4252;
+  --nord2: #434c5e;
+  --nord3: #4c566a;
+  /* snow storm */
+  --nord4: #d8dee9;
+  --nord5: #e5e9f0;
+  --nord6: #eceff4;
+  /* forst */
+  --nord7: #8fbcbb;
+  --nord8: #88c0d0;
+  --nord9: #81a1c1;
+  --nord10: #5e81ac;
+  /* aurora */
+  --nord11: #bf616a;
+  --nord12: #d08770;
+  --nord13: #ebcb8b;
+  --nord14: #a3be8c;
+  --nord15: #b48ead;
+}
+
+body {
+  margin: 0;
+  background-color: var(--nord1);
+  color: var(--nord6);
+  font-family: "Varela Round", sans-serif;
+}
+
+main {
+  width: 80%;
+  margin: auto;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+a {
+  color: var(--nord7);
+  text-decoration: none;
+}
+
+main article {
+  background-color: var(--nord2);
+  box-shadow: rgb(15 17 21 / 20%) 0px 3px 6px 0px;
+  border-radius: 0.7rem;
+  padding: 0.4rem 1rem;
+  margin: 1rem 0;
+  text-align: justify;
+}
+
+main aside {
+  min-width: 20rem;
+}
+
+/* navbar */
+
+header {
+  background-color: var(--nord3);
+  padding: 1rem 0;
+  margin-bottom: 3rem;
+}
+
+nav {
+  width: 80%;
+  margin: auto;
+  display: flex;
+  font-weight: bold;
+  align-items: center;
+}
+
+nav h1 {
+  margin: 0;
+}
+
+nav h1 a {
+  color: var(--nord14);
+}
+
+nav div.grow {
+  flex-grow: 1;
+}
+
+nav a.nav-link {
+  color: var(--nord13);
+  margin-left: 0.5rem;
+}
+
+/* footer */
+
+footer {
+  background-color: var(--nord0);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1.5rem 10%;
+  margin-top: 5rem;
+}
+
+footer img {
+  width: 25rem;
+}
+
+footer ul {
+  padding: 0;
+}
+
+footer ul li {
+  list-style: none;
+}

@@ -1,0 +1,2 @@
+## Entregas
+Por favor cria uma pasta no formato `Primeiro-Ultimo`, onde possas colocar lá os ficheiros do FreeCAD e onde podemos depois ver o que fizeste! Qualquer coisa, podes mandar mensagem a uma das três pessoas que está no [README](../README.md) deste repositório.

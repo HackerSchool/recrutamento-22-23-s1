@@ -18,7 +18,7 @@ colortheme:
 - beaver
 ---
 
-# What are Electronics?
+## What are Electronics?
 
 # Fundamental Notions and Laws in Electronics
 There are three main notions to be understood in electronics:
@@ -39,7 +39,7 @@ Or in a funnier way:
 ![Ohm's Law](./images/ohm-carton.jpg){height=145px}
 
 # Kirchhoff's Voltage Law
-*The sum of all electrical tensions in a loop*
+*The sum of all potential diferences in a loop is zero!*
 
 ![Kirchhoff's Voltage Law](./images/kvl.png){height=200px}
 
@@ -53,11 +53,6 @@ Then we can also add some additional notions
 	
 + **Power**(SI: Watt): Rate of transference of electrical energy through a circuit, using the definition of Electrical Tension and current:
 	$$ P=U \times I $$
-
-+ **Capacitance**(SI: Farad): The ability of a material to store electrical charge. In a DC circuit:
-	$$ C=\frac{q}{U} $$
-
-# Electrical Components
 
 # Breadboards and PCBs I
 ![A BREADboard!](./images/meme.jpg){height=200px}
@@ -75,23 +70,84 @@ We can then use some software tools (like KiCAD) to help us create a PCB schemat
 ![A printable circuit board](./images/pcb.jpg){height=60px}
 
 # Power sources
+The most fundamental devices are power sources.
+They supply (active component) a given tension to our circuit through the conversion of an $\mathrm{x}$ type of energy (chemical, mechanical, etc.) into electrical energy.
+
+![Batteries - A conversion device of chemical into electrical energy](./images/batteries.jpg){height=100px}
 
 # Resistors
+Another fundamental component.
+Depending on the resistor type they introduce a fixed or variable resistance (R) into our circuits. They are unpolarized.
+
+![Series association: $R_{\mathrm {eq} }=R_{1}+R_{2}+\cdots +R_{n}$](./images/reriesR.png){height=60px}
+
+![Paralel association: $\frac {1}{R_{\mathrm {eq} }}=\frac {1}{R_{1}}+\frac {1}{R_{2}}+\cdots +\frac {1}{R_{n}}$](./images/paralelR.png){height=60px}
+
+# Resistors II
+
+![How to read a resistor](./images/resistortable.png){height=200px}
 
 # Toggle Components
+They toggle the loop where they are placed, opening or closing said loop.
+
+![A press button and a toggle switch](./images/switch.png){height=145px}
+
 
 # Capacitors in a DC circuit
 
+Capacitors are components with relevant capacitance.
+
++ **Capacitance**(SI: Farad): The ability of a material to store electrical charge. In a DC circuit:
+	$$ C=\frac{q}{U} $$
+
+![A capacitor schematic](./images/capacitor.png){height=100px}
+
+Why is this relevant?....
+
+# A pratical example - the RC circuit
+![A resistor-capacitor circuit](./images/rc.jpg){height=80px}
+
+![The capacitor's charge and discharge graphs with $\tau = RC$](./images/rc-graph.jpg){height=80px}
+
+And capacitors have many more appliances such as filtering, shielding, etc.
+
 # Diodes
+Diodes are components that limit the flow of electrical current in a single orientation. Nowadays most diodes are composed of semiconductors in a p-n junction, which is also the material basis for another important component, the **transistor**.
+
+![P-N junction](./images/pn_junction.png){height=100px}
+
+Diodes have a limited use in DC circuits, however we can use them to protect other components from inverted polarity, to construct diode logic gates, etc., or...
 
 # LEDs
+Arguably the most used diodes in DC circuits.
 
-# Transistors 101
+![The inner workings of a LED](./images/led_work.jpg){height=200px}
+
+# Integrated Circuits
+Integrated circuits have a miriad of functions from amp-ops, to integrated diodes, to timers and even logic gates.
+They are composed of tiny MOSFE transistors.
+
+![The Signetic's 555 timer IC](./images/555.JPG){height=25px}
+
+![Logic diagram of the 555 timer](./images/555-logic.png){height=100px}
+
+# Integrated Circuits II
+
+![CMOS diagram of the 555 timer ](./images/555-cmos.png){height=200px}
 
 # Arduino
+Arduino boards are microcontrollers under a CC-BY-SA license.
 
-# Schematic
+They allow the integration of digital and analogic control, UART bus communication, etc.  into electronic circuits, expanding their potential.
+
+![Arduino Nano pinout](./images/nano.png){height=150px}
 
 # Arduino IDE
+The Arduino IDE, is an integrated development enviroment under LGPL.
+
+It allows serial communication with a Arduino board, compilation of .ino files (based on C++) and flashing of said binaries into a Arduino Board.
+Recently a 2.0 version of the IDE has been released.
+
+![Arduino IDE](./images/IDE.png){height=140px}
 
 # Controlling your Arduino with C++

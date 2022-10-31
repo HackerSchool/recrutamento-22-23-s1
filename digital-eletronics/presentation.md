@@ -150,4 +150,193 @@ Recently a 2.0 version of the IDE has been released.
 
 ![Arduino IDE](./images/IDE.png){height=140px}
 
+# C++ vs Python
+- C++ is compiled, while Python is interpreted.
+- Statements end with a semicolon (;), brackets are used to define block of code,
+instead of indentation.
+- Variables are statically typed, instead of dynamically typed.
+- Lower level, closer to the hardware, allows for more control.
+
+# Variables
+## Python
+```py
+foo = 1
+bar = 3.1415 # sample text
+baz = True
+```
+
+## C++
+```cpp
+int foo = 1;
+float bar = 3.1415; // sample text
+bool baz = true;
+```
+
+# Functions
+## Python
+```py
+def add(a, b):
+	return a + b
+```
+
+## C++
+```cpp
+int add(int a, int b) {
+	return a + b;
+}
+```
+
+# Conditional Statements
+## Python
+```py
+if bar > 0:
+	return bar
+elif bar < 0:
+	return -bar
+else:
+	return 0
+```
+
+## C++
+```cpp
+if (bar > 0) {
+	return bar;
+} else if (bar < 0) {
+	return -bar;
+} else {
+	return 0;
+}
+```
+
+# While Loops
+## Python
+```py
+foo = 0
+while foo < 10:
+	foo += 1
+	# do something
+```
+
+## C++
+```cpp
+int foo = 0;
+while (foo < 10) {
+	foo += 1;
+	// do something
+}
+```
+
+# For Loops
+## Python
+```py
+for foo in range(10):
+	# do something
+```
+
+## C++
+```cpp
+for (int foo = 0; foo < 10; foo += 1) {
+	// do something
+}
+```
+
 # Controlling your Arduino with C++
+
+## Program Structure
+
+```cpp
+void setup() {
+	// code here runs once, when the board is powered on
+}
+
+void loop() {
+	// code here runs repeatedly, forever
+}
+```
+
+# Serial
+
+![Serial Monitor](./images/serial.png){height=100px}
+
+```cpp
+void setup() {
+	Serial.begin(9600);
+}
+
+void loop() {
+	Serial.println("Hello World!");
+}
+```
+
+# Delay
+
+```cpp
+int secondsElapsed;
+
+void setup() {
+	Serial.begin(9600);
+	secondsElapsed = 0; // start at 0
+}
+
+void loop() {
+	Serial.print(secondsElapsed);
+	Serial.println(" seconds have passed");
+	secondsElapsed += 1;
+	delay(1000); // wait for a second before repeating
+}
+```
+
+---
+
+![It's always time for a JoJo reference](./images/dio.png){height=100px}
+
+```
+0 seconds have passed
+1 seconds have passed
+2 seconds have passed
+3 seconds have passed
+4 seconds have passed
+5 seconds have passed
+(...)
+```
+
+# IO functions
+
+- `pinMode(pin, mode)`: sets the mode of a pin to either `INPUT` or `OUTPUT`.
+- `digitalWrite(pin, value)`: sets the value of a pin to either `HIGH` or `LOW`.
+- `digitalRead(pin)`: returns the value of a pin, either `HIGH` or `LOW`.
+- `analogWrite(pin, value)`: sets the value of a pin to a value between 0 and 255.
+- `analogRead(pin)`: returns the value of a pin, between 0 and 1023.
+
+# LED Blink
+
+```cpp
+void setup() {
+	pinMode(13, OUTPUT); // set pin 13 as output
+}
+
+void loop() {
+	digitalWrite(13, HIGH); // turn on the LED
+	delay(1000); // wait for a second
+	digitalWrite(13, LOW); // turn off the LED
+	delay(1000); // wait for a second
+}
+```
+
+# Button
+
+```cpp
+void setup() {
+	pinMode(2, INPUT); // set pin 2 as input
+	Serial.begin(9600);
+}
+
+void loop() {
+	if (digitalRead(2) == HIGH) {
+		Serial.println("Button pressed");
+	}
+}
+```
+
+# Project
+

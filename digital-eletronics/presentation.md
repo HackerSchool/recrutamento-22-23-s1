@@ -311,14 +311,16 @@ void loop() {
 # LED Blink
 
 ```cpp
+int ledPin = 13;
+
 void setup() {
-	pinMode(13, OUTPUT); // set pin 13 as output
+	pinMode(ledPin, OUTPUT); // set LED pin as output
 }
 
 void loop() {
-	digitalWrite(13, HIGH); // turn on the LED
+	digitalWrite(ledPin, HIGH); // turn on the LED
 	delay(1000); // wait for a second
-	digitalWrite(13, LOW); // turn off the LED
+	digitalWrite(ledPin, LOW); // turn off the LED
 	delay(1000); // wait for a second
 }
 ```
@@ -326,13 +328,15 @@ void loop() {
 # Button
 
 ```cpp
+int buttonPin = 2;
+
 void setup() {
-	pinMode(2, INPUT); // set pin 2 as input
+	pinMode(buttonPin, INPUT); // set pin 2 as input
 	Serial.begin(9600);
 }
 
 void loop() {
-	if (digitalRead(2) == HIGH) {
+	if (digitalRead(buttonPin) == HIGH) {
 		Serial.println("Button pressed");
 	}
 }

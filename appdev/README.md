@@ -3,6 +3,9 @@
 > Esta é a pasta do workshop e vai servir de base para entregas e informações para o workshop de Flutter da HackerSchool.
 > Qualquer dúvida, podem falar comigo no discord: `MaxxVilp#5243`
 
+## Workshop em si
+O workshop pode ser visto [aqui](https://docs.google.com/presentation/d/1VM8eMKqtHkzsTgK0mAQn3q6KIl_WglAG_23pYutiTN8/edit?usp=sharing), sendo que os exemplos demonstrados no mesmo estão neste repositório.
+
 ## Enunciado do projeto
 Dado que o flutter é uma ferramenta bastante visual, o objetivo deste projeto é trazerem uma aplicação que tenha uma funcionalidade interessante, mas que esteja bem apresentável, dentro dos teus gostos claro (*rule of thumb*: se achares que outra pessoa gostaria de usar a tua aplicação só olhando para ela, tens o design bem feito).
 

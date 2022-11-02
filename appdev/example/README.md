@@ -1,16 +1,11 @@
-# example
+# Projeto exemplo do Workshop de AppDev 
 
-A new Flutter project.
+Este é o projeto exemplo para o workshop de AppDev da HackerSchool.
+Aqui tens o código usado no mesmo, sendo que poderá sofrer algumas alterações até ao dia do workshop - 02/11/2022@18h.
 
-## Getting Started
+Tenta entender o código no ficheiro `./lib/main.dart`, sendo que deixei alguns comentários lá a fim de ajudar no processo. 
+Podes alterar, experimentar ou começar a partir daqui.
+Desde que entendas e percebas o que estás a fazer, isso é que interessa.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+--------------
+Qualquer dúvida, não hesites em me enviar mensagem no discord: `MaxxVilp#5243`.

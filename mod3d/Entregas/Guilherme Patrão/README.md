@@ -4,7 +4,7 @@ O objeto modelado é uma Electro Vision da região de Inazuma do jogo Genshin Im
 
 **electro_vision.jpg :** imagem de referência para o objeto modelado
 
-**vision_support.FCStd :** armadura de suporte para a jóia
+**vision_support.FCStd :** armação de suporte para a jóia
 
 **electro_jewel.FCStd :** jóia 
 

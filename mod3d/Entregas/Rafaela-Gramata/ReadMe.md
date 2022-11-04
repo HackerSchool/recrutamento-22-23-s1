@@ -1,0 +1,1 @@
+Bem só queria dizer aqui que entreguei depois da hora e sem o assembly porque o Freecad estava a crashar e a não guardar nehuma das minhas alterações. Não vou mentir, desesperei imenso. Também não tive muito para o assembly porque fiquei presa no filtro da garrafa pois não arranjava maneira de fazer os furinhos.

@@ -1,6 +1,6 @@
 # hacker_school_project
 
-A new Flutter project.
+my flutter project for hacker school recruitment
 
 ## Getting Started
 

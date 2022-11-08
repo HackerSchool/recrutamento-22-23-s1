@@ -6,4 +6,10 @@ Calculates object velocity (in `m/s`) from sensor A to sensor B.
 
 [Schematic](./schematic.fzz) was done using [Fritzing](https://fritzing.org/) software.
 
-a bit messy/buggy, i hate cables !
+## Dependencies
+- [SevSeg](https://github.com/DeanIsMe/SevSeg) : Seven segment display controller library for Arduino
+
+
+
+
+*maybe a bit simple/messy/buggy, i hate cables !*

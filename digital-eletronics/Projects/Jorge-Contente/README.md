@@ -9,3 +9,5 @@ Pressionar ambos ao mesmo tempo dá reset ao jogo.
 
 Por vezes os botões aparentam não funcionar mas tem a ver com a forma de como o ´´´void loop()´´´ principal corre. 
 Sugiro pressioná-los quando a LED no navegador se encontra desligada.
+
+Link para o circuito ligeiramente simplificado em Thinkercad: https://www.tinkercad.com/things/kiSvrYPMmNI

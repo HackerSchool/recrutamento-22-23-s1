@@ -1,6 +1,6 @@
 Jogo do galo realizado com 9 LEDs. 
 
-O botão esquerdo navega a grelha e o direito mete o "simbolo" no sitio respetivo. 
+O botão direito navega a grelha e o esquerdo mete o "simbolo" no sitio respetivo. 
 Pressionar ambos ao mesmo tempo dá reset ao jogo.
 
 - "Navegador" = LED  piscar lentamente;

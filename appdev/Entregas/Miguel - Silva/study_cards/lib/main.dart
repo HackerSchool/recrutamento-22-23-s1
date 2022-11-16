@@ -1,7 +1,57 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'dart:async';
+import 'package:path_provider/path_provider.dart';
+import 'dart:convert';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'main_column_content/main_column.dart';
+import './the_cards.dart';
+import 'popup_messages/create_card/create_card_menu.dart';
+import './splash_screen.dart';
+import './help_page.dart';
 
 void main() {
   runApp(const MyApp());
+}
+
+class CardStorage {
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+    final exdirectory = await getExternalStorageDirectory();
+
+    //print(directory);
+
+    return (exdirectory == null) ? directory.path : exdirectory.path;
+    //return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/cards.txt');
+  }
+
+  Future<String> readCards() async {
+    try {
+      final file = await _localFile;
+
+      // Read the file
+      final cardContent = await file.readAsString();
+
+      return cardContent;
+    } catch (e) {
+      // If encountering an error, return "0"
+      return "0";
+    }
+  }
+
+  Future<File> writeCards(String cardsJSON) async {
+    final file = await _localFile;
+
+    // Write the file
+    return file.writeAsString(cardsJSON);
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -11,105 +61,179 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Study Cards',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: Colors.deepPurple,
+          cardColor: Colors.deepPurple[50],
+        ),
+        scaffoldBackgroundColor: Colors.deepPurple[50],
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: AnimatedSplashScreen(
+        splashIconSize: 500,
+        duration: 500, //duration: 2000,
+        backgroundColor: Colors.deepPurple[50] as Color,
+        splash: Splash(key: key, backgroundColor: Colors.deepPurple[50]),
+        splashTransition: SplashTransition.fadeTransition,
+        nextScreen: MyHomePage(),
+      ),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+  MyHomePage({super.key});
+  final String title = "My Study Cards";
+  final CardStorage cardStorage = CardStorage();
+  TheCards theCards = TheCards(resetMap: true);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  var createCardMenu = CreateCardMenu();
+  bool onlyFavorites = false;
+  bool _beginnerState = true;
 
-  void _incrementCounter() {
+  Future<void> addCard({required String question, required String answer, required bool favorite}) {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      widget.theCards.add(question: question, answer: answer, favorite: favorite);
+    });
+    // Write the variable as a string to the file.
+    //print("\n\n- add cards>");
+    //print(widget.theCards.cardQnA.length);
+    return widget.cardStorage.writeCards(jsonEncode(widget.theCards.cardQnA));
+  }
+
+  Future<void> deleteCards(int index) {
+    // Write the variable as a string to the file.
+    //print("\n\n- delete card>");
+    //print(widget.theCards.cardQnA.length);
+    widget.theCards.cardQnA.removeAt(index);
+    return widget.cardStorage.writeCards(jsonEncode(widget.theCards.cardQnA));
+  }
+
+  Future<void> editOrOrderCard({int? index, String? question, String? answer, bool? favorite}) {
+    setState(() {
+      if (index != null) {
+        question != null ? widget.theCards.cardQnA[index]["question"] = question : {};
+        answer != null ? widget.theCards.cardQnA[index]["answer"] = answer : {};
+        favorite != null ? widget.theCards.cardQnA[index]["favorite"] = favorite : {};
+      }
+    });
+    // Write the variable as a string to the file.
+    //print("\n\n- edit or order cards>");
+    //print(widget.theCards.cardQnA);
+    return widget.cardStorage.writeCards(jsonEncode(widget.theCards.cardQnA));
+  }
+
+  Future<void> _loadBeginnerState() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _beginnerState = (prefs.getBool('beginnerState') ?? true);
+    });
+  }
+
+  Future<void> _saveBeginnerState() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      prefs.setBool('beginnerState', false);
     });
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    widget.cardStorage.readCards().then((rawJSON) {
+      setState(() {
+        widget.theCards.loadParsedJson(jsonDecode(rawJSON));
+        //print("after Decode MAIN APP--->");
+        //print(widget.theCards);
+      });
+    });
+
+    _pushHelpPageHelper();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(widget.title),
+            IconButton(
+              icon: const Icon(Icons.list), //menu_rounded
+              onPressed: _pushFavorites,
             ),
           ],
         ),
       ),
+      body: MainColumn(
+        theCards: widget.theCards,
+        editOrOrderCard: editOrOrderCard,
+        deleteCards: deleteCards,
+      ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: (() => createCardMenu.createCardMenu(context, addCard)), // (() => createCardMenu.createCardMenu(context, addCard)),
+        tooltip: 'Add Card',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
+  }
+
+  void _pushFavorites() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (BuildContext) {
+          TheCards favoriteCards = TheCards(resetMap: true);
+          for (var cardQnA in widget.theCards.cardQnA) {
+            if (cardQnA["favorite"] as bool) {
+              favoriteCards.cardQnA.add(cardQnA);
+            }
+          }
+
+          return Scaffold(
+            appBar: AppBar(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Favorite cards"),
+                  IconButton(
+                    icon: const Icon(Icons.help),
+                    onPressed: _pushHelpPage,
+                  ),
+                ],
+              ),
+            ),
+            body: MainColumn(
+              theCards: favoriteCards,
+              editOrOrderCard: editOrOrderCard,
+              deleteCards: deleteCards,
+              limitedVersion: true,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  void _pushHelpPage() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return HelpPage(
+        context: context,
+      );
+    }));
+  }
+
+  Future<void> _pushHelpPageHelper() async {
+    await _loadBeginnerState();
+    if (_beginnerState) {
+      _pushHelpPage();
+      await _saveBeginnerState();
+    }
   }
 }

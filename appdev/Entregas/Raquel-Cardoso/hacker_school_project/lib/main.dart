@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
@@ -152,9 +155,14 @@ class _AnimeNamesState extends State<AnimeNames> {
         title: const Text('Top 100 AniList Animes'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.question_mark_rounded),
+            onPressed: _guide,
+            tooltip: 'How to use',
+          ),
+          IconButton(
             icon: const Icon(Icons.list),
             onPressed: _pushSaved,
-            tooltip: 'Top 100 AniList Animes',
+            tooltip: 'Watched Anime',
           ),
         ],
       ),
@@ -199,6 +207,22 @@ class _AnimeNamesState extends State<AnimeNames> {
     );
   }
 
+  void _guide() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (context) {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('How to use'),
+            ),
+            body: const Text(
+                '1. You can list all your watched anime from top 100 here!\n2. Start by scrolling and recognizing some names\n3. When you find an anime you have watched tap the check box to save it\n4. You can see all your watched anime by clicking on the List icon'),
+          );
+        },
+      ),
+    );
+  }
+
   void _pushSaved() {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
@@ -222,7 +246,7 @@ class _AnimeNamesState extends State<AnimeNames> {
 
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Saved Animes'),
+              title: const Text('Watched Animes'),
             ),
             body: ListView(children: divided),
           );

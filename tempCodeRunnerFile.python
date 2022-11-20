@@ -1,0 +1,196 @@
+import warnings
+import numpy as np
+import math
+
+def warn(*args, **kwargs):
+    pass
+warnings.warn = warn
+
+# Observações
+x_1 = np.array([[1],
+                [2]])
+x_2 = np.array([[-1],
+                [1]])
+x_3 = np.array([[1],
+                [0]])
+
+# Sigmas
+sigma_1 = np.array([[2, 1],
+                    [1, 2]])
+sigma_2 = np.array([[2, 0],
+                    [0, 2]])
+
+# U's
+u_1 = np.array([[2],
+               [2]])
+u_2 = np.array([[0],
+                [0]])
+
+# Pi's
+pi_1, pi_2 = 0.5, 0.5
+
+observations = [x_1, x_2, x_3]
+result_1 = []
+result_2 = []
+p_x_c1 = []
+p_x_c2 = []
+k1 = []
+k2 = []
+# Determinantes dos sigmas
+det_sigma_1 = np.linalg.det(sigma_1)
+print("det sigma 1:", det_sigma_1)
+det_sigma_2 = np.linalg.det(sigma_2)
+print("det sigma 2:", det_sigma_2)
+
+# Determinante do sigma elevado a 1/2
+root_det_sigma_1 = det_sigma_1**(1/2)
+print("raiz det sigma 1:", root_det_sigma_1)
+root_det_sigma_2 = det_sigma_2**(1/2)
+print("raiz det sigma 2:", root_det_sigma_2)
+
+# Matriz inversa dos sigmas
+inv_sigma_1 = np.linalg.inv(sigma_1)
+print("inv sigma 1:", inv_sigma_1)
+inv_sigma_2 = np.linalg.inv(sigma_2)
+print("inv sigma 2:", inv_sigma_2)
+
+print("x1 - u1:", np.subtract(x_1, u_1))
+
+for obs in observations:
+    # Xi - U1
+    x_u1 = np.subtract(obs, u_1)
+    # Xi - U2
+    x_u2 = np.subtract(obs, u_2)
+    # Transpostas das anteriores
+    transposed_x_u1 = np.transpose(x_u1)
+    transposed_x_u2 = np.transpose(x_u2)
+
+    # Fórmula nojenta e enorme (P(x|c=1),P(x|c=2))
+    x = 1/(root_det_sigma_1 * 2 * math.pi) * math.exp(-(1/2) * np.matmul(np.matmul(transposed_x_u1, inv_sigma_1), x_u1))
+    y = 1/(root_det_sigma_2 * 2 * math.pi) * math.exp(-(1/2) * np.matmul(np.matmul(transposed_x_u2, inv_sigma_2), x_u2))
+    result_1.append(x)
+    result_2.append(y)
+    # P(x,c=1),P(x,c=2)
+    p_x_c1.append(x * pi_1)
+    p_x_c2.append(y * pi_2)
+    # k1,k2
+    k1.append(x * pi_1 / (x * pi_1 + y * pi_2))
+    k2.append(y * pi_2 / (x * pi_1 + y * pi_2))
+
+print("P(x|c=1):", result_1)
+print("P(x|c=2):", result_2)
+print("P(x,c=1):", p_x_c1)
+print("P(x,c=2):", p_x_c2)
+print("k1:", k1)
+print("k2:", k2)
+
+# Maximização
+
+# P's
+P_1 = np.array([[k1[0]],
+                [k1[1]],
+                [k1[2]]])
+P_2 = np.array([[k2[0]],
+                [k2[1]],
+                [k2[2]]])
+
+# W's
+w_1 = sum(k1)
+w_2 = sum(k2)
+print("w1:", w_1)
+print("w2:", w_2)
+
+
+# Priors
+new_pi_1 = w_1 / (w_1 + w_2)
+new_pi_2 = w_2 / (w_1 + w_2)
+print("New Pi 1:", new_pi_1)
+print("New Pi 2:", new_pi_2)
+
+# New values
+
+# Centroids
+new_u_1 = 1/w_1 * (k1[0]*x_1 + k1[1]*x_2 + k1[2]*x_3)
+new_u_2 = 1/w_2 * (k2[0]*x_1 + k2[1]*x_2 + k2[2]*x_3)
+
+# Sigmas
+sigmas = []
+for obs in observations:
+    value_1_1 = ((obs[0] - new_u_1[0])**2)[0]
+    value_2_2 = ((obs[1] - new_u_1[1])**2)[0]
+    value_extra = ((obs[0] - new_u_1[0]) * (obs[1] - new_u_1[1]))[0]
+    sigma_obs = np.array([[value_1_1, value_extra],
+                          [value_extra, value_2_2]])
+    sigmas.append(sigma_obs)
+new_sigma_1 = 1/w_1 * (k1[0]*sigmas[0] + k1[1]*sigmas[1] + k1[2]*sigmas[2])
+
+
+sigmas = []
+for obs in observations:
+    value_1_1 = ((obs[0] - new_u_2[0]) ** 2)[0]
+    value_2_2 = ((obs[1] - new_u_2[1]) ** 2)[0]
+    value_extra = ((obs[0] - new_u_2[0]) * (obs[1] - new_u_2[1]))[0]
+    sigma_obs = np.array([[value_1_1, value_extra],
+                          [value_extra, value_2_2]])
+    sigmas.append(sigma_obs)
+new_sigma_2 = 1/w_2 * (k2[0]*sigmas[0] + k2[1]*sigmas[1] + k2[2]*sigmas[2])
+print("sigma1:", sigmas[0])
+print("sigma2:", sigmas[1])
+print("sigma3:", sigmas[2])
+
+# Prints
+
+print("New U1:", new_u_1)
+print("New U2:", new_u_2)
+print("New Sigma 1:", new_sigma_1)
+print("New Sigma 2:", new_sigma_2)
+
+# 2. a)
+root_det_new_sigma_1 = np.linalg.det(new_sigma_1)**(1/2)
+root_det_new_sigma_2 = np.linalg.det(new_sigma_2)**(1/2)
+inv_new_sigma_1 = np.linalg.inv(new_sigma_1)
+inv_new_sigma_2 = np.linalg.inv(new_sigma_2)
+new_result_1 = []
+new_result_2 = []
+new_p_x_c1 = []
+new_p_x_c2 = []
+
+for obs in observations:
+    # Xi - U1
+    x_u1 = np.subtract(obs, new_u_1)
+    # Xi - U2
+    x_u2 = np.subtract(obs, new_u_2)
+    # Transpostas das anteriores
+    transposed_x_u1 = np.transpose(x_u1)
+    transposed_x_u2 = np.transpose(x_u2)
+
+    # Fórmula nojenta e enorme (P(x|c=1),P(x|c=2))
+    x = 1/(root_det_new_sigma_1 * 2 * math.pi) * math.exp(-(1/2) * np.matmul(np.matmul(transposed_x_u1, inv_new_sigma_1), x_u1))
+    y = 1/(root_det_new_sigma_2 * 2 * math.pi) * math.exp(-(1/2) * np.matmul(np.matmul(transposed_x_u2, inv_new_sigma_1), x_u2))
+    new_result_1.append(x)
+    new_result_2.append(y)
+    # P(x,c=1),P(x,c=2)
+    new_p_x_c1.append(x * new_pi_1)
+    new_p_x_c2.append(y * new_pi_2)
+
+# x1 = cluster1, x2 = cluster2, x3 = cluster1
+print("P(x, c=1):", new_p_x_c1)
+print("P(x, c=2):", new_p_x_c2)
+
+# 2.b)
+
+dist_x1_x3 = np.linalg.norm(x_1 - x_3)
+print("dist x1 x3", dist_x1_x3)
+dist_x1_x2 = np.linalg.norm(x_1 - x_2)
+print("dist x1 x2", dist_x1_x2)
+s_x_1 = 1 - dist_x1_x3/dist_x1_x2 if dist_x1_x3 < dist_x1_x2 else dist_x1_x2/dist_x1_x3 - 1
+
+dist_x3_x1 = dist_x1_x3
+dist_x3_x2 = np.linalg.norm(x_3 - x_2)
+print("dist x3 x2", dist_x3_x2)
+s_x_2 = 1 - dist_x3_x1/dist_x3_x2 if dist_x3_x1 < dist_x3_x2 else dist_x3_x2/dist_x3_x1 - 1
+
+print("sx1:", s_x_1)
+print("sx2:", s_x_2)
+
+print("Cluster 1 silhouette:", sum([s_x_1, s_x_2])/2)

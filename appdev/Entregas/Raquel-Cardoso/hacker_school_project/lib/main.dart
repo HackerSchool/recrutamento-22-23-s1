@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:page_transition/page_transition.dart';
 
 void main() {
   runApp(const MyApp());
@@ -7,109 +9,225 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+        title: 'Top 100 Anilist Anime Names',
+        theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+              backgroundColor: Color.fromARGB(255, 180, 99, 255),
+              foregroundColor: Color.fromARGB(255, 17, 6, 16)),
+        ),
+        home: AnimatedSplashScreen(
+            duration: 1800,
+            splash: Icons.airline_stops_sharp,
+            nextScreen: const AnimeNames(),
+            splashTransition: SplashTransition.rotationTransition,
+            pageTransitionType: PageTransitionType.fade,
+            backgroundColor: Color.fromARGB(255, 180, 99, 255)));
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class AnimeNames extends StatefulWidget {
+  const AnimeNames({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<AnimeNames> createState() => _AnimeNamesState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _AnimeNamesState extends State<AnimeNames> {
+  final _suggestions = <String>[];
+  final _watched = <String>{};
+  final _biggerFont = const TextStyle(fontSize: 20);
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  List<String> generateAnimeNames() {
+    List<String> allAnimeAvailable = [
+      "Gintama: THE FINAL",
+      "Fruits Basket: The Final",
+      "Gintamaº",
+      "Kaguya-sama wa Kokurasetai: Ultra Romantic",
+      "Hagane no Renkinjutsushi: FULLMETAL ALCHEMIST",
+      "Shingeki no Kyojin 3 Part 2",
+      "3-gatsu no Lion 2",
+      "Owarimonogatari (Ge)",
+      "HUNTERxHUNTER (2011)",
+      "Steins;Gate",
+      "BLEACH: Sennen Kessen-hen",
+      "Gintama'",
+      "Gintama': Enchousen",
+      "Gintama.",
+      "Ginga Eiyuu Densetsu",
+      "Violet Evergarden Movie",
+      "Mob Psycho 100 II",
+      "Koe no Katachi",
+      "Monogatari Series: Second Season",
+      "MONSTER",
+      "Kimetsu no Yaiba: Yuukaku-hen",
+      "Ashita no Joe 2",
+      "Shoujo☆Kageki Revue Starlight Movie",
+      "Haikyuu!!: Karasuno Koukou VS Shiratorizawa Gakuen Koukou",
+      "Gintama: Kanketsu-hen - Yorozuya yo Eien Nare",
+      "Kizumonogatari III: Reiketsu-hen",
+      "CLANNAD: After Story",
+      "ONE PIECE",
+      "Gintama.: Shirogane no Tamashii-hen - Kouhan-sen",
+      "Shingeki no Kyojin: The Final Season",
+      "Vinland Saga",
+      "Shiguang Dailiren",
+      "Modao Zushi 3",
+      "SPYxFAMILY",
+      "Shingeki no Kyojin: The Final Season Part 2",
+      "Jujutsu Kaisen",
+      "Shouwa Genroku Rakugo Shinjuu: Sukeroku Futatabi-hen",
+      "Code Geass: Hangyaku no Lelouch R2",
+      "Mushishi Zoku Shou 2",
+      "Chainsaw Man",
+      "86: Eighty Six Part 2",
+      "Mushoku Tensei: Isekai Ittara Honki Dasu Part 2",
+      "Kaguya-sama wa Kokurasetai?: Tensaitachi no Renai Zunousen",
+      "Fruits Basket: 2nd Season",
+      "Haikyuu!! 2nd Season",
+      "Odd Taxi",
+      "Made in Abyss: Retsujitsu no Ougonkyou",
+      "Gintama.: Shirogane no Tamashii-hen",
+      "Fate/stay night [Heaven's Feel] III. spring song",
+      "Shin Evangelion Movie:||",
+      "Hajime no Ippo: THE FIGHTING!",
+      "Suzumiya Haruhi no Shoushitsu",
+      "Cowboy Bebop",
+      "Made in Abyss: Fukaki Tamashii no Reimei",
+      "Kimi no Na wa.",
+      "Mushishi Zoku Shou",
+      "ARIA The ORIGINATION",
+      "Cyberpunk: Edgerunners",
+      "Sen to Chihiro no Kamikakushi",
+      "Jujutsu Kaisen 0",
+      "Shingeki no Kyojin 3",
+      "Ping Pong THE ANIMATION",
+      "Mob Psycho 100 III",
+      "Haikyuu!! TO THE TOP 2",
+      "Kimetsu no Yaiba: Mugen Ressha-hen",
+      "Shin Seiki Evangelion Movie: Air / Magokoro wo, Kimi ni",
+      "Tian Guan Ci Fu Special",
+      "Made in Abyss",
+      "Violet Evergarden",
+      "Natsume Yuujinchou Shi",
+      "SPYxFAMILY Part 2",
+      "Kizumonogatari II: Nekketsu-hen",
+      "Natsume Yuujinchou Roku",
+      "Fate/Zero 2nd Season",
+      "Yojouhan Shinwa Taikei",
+      "Hajime no Ippo: New Challenger",
+      "Gintama",
+      "Mushishi",
+      "PERFECT BLUE",
+      "Ousama Ranking",
+      "Tengen Toppa Gurren Lagann",
+      "Chihayafuru 3",
+      "NANA",
+      "Mononoke-hime",
+      "Rurouni Kenshin: Meiji Kenkaku Romantan - Tsuioku-hen",
+      "Yuru Camp△ SEASON 2",
+      "JoJo no Kimyou na Bouken: Ougon no Kaze",
+      "Owarimonogatari",
+      "Code Geass: Hangyaku no Lelouch",
+      "Howl no Ugoku Shiro",
+      "Fate/stay night [Heaven's Feel] II. lost butterfly",
+      "JoJo no Kimyou na Bouken: Diamond wa Kudakenai",
+      "Shingeki no Kyojin 2",
+      "Bocchi the Rock!",
+      "Mob Psycho 100",
+      "Fruits Basket: prelude",
+      "Re:Zero kara Hajimeru Isekai Seikatsu 2nd Season Part 2",
+      "Seishun Buta Yarou wa Yumemiru Shoujo no Yume wo Minai",
+      "Sora yori mo Tooi Basho"
+    ];
+    return allAnimeAvailable;
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: const Text('Top 100 AniList Animes'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.list),
+            onPressed: _pushSaved,
+            tooltip: 'Top 100 AniList Animes',
+          ),
+        ],
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+      body: ListView.builder(
+        padding: const EdgeInsets.all(16.0),
+        itemBuilder: (context, i) {
+          if (i.isOdd) return const Divider();
+
+          final index = i ~/ 2;
+          if (index >= _suggestions.length) {
+            _suggestions.addAll(generateAnimeNames().take(100));
+          }
+
+          final alreadySaved = _watched.contains(_suggestions[index]);
+
+          return ListTile(
+            title: Text(
+              _suggestions[index],
+              style: _biggerFont,
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            trailing: Icon(
+              alreadySaved
+                  ? Icons.check_box_outlined
+                  : Icons.check_box_outline_blank_outlined,
+              color: alreadySaved
+                  ? Color.fromARGB(255, 180, 99, 255)
+                  : Color.fromARGB(255, 180, 99, 255),
+              semanticLabel: alreadySaved ? 'Remove from watched' : 'Watched',
             ),
-          ],
-        ),
+            onTap: () {
+              setState(() {
+                if (alreadySaved) {
+                  _watched.remove(_suggestions[index]);
+                } else {
+                  _watched.add(_suggestions[index]);
+                }
+              });
+            },
+          );
+        },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  void _pushSaved() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (context) {
+          final tiles = _watched.map(
+            (pair) {
+              return ListTile(
+                title: Text(
+                  pair,
+                  style: _biggerFont,
+                ),
+              );
+            },
+          );
+          final divided = tiles.isNotEmpty
+              ? ListTile.divideTiles(
+                  context: context,
+                  tiles: tiles,
+                ).toList()
+              : <Widget>[];
+
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Saved Animes'),
+            ),
+            body: ListView(children: divided),
+          );
+        },
+      ),
     );
   }
 }

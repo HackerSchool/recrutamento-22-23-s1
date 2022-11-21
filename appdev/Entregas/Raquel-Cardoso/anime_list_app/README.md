@@ -1,4 +1,4 @@
-# hacker_school_project
+# anime_list_app
 
 my flutter project for hacker school recruitment !!
 

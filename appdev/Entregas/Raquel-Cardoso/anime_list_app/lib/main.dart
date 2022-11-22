@@ -173,7 +173,7 @@ class _AnimeNamesState extends State<AnimeNames> {
             _suggestions.addAll(generateAnimeNames().take(100));
           }
 
-          final alreadySaved = _watched.contains(_suggestions[index]);
+          final alreadyWatched = _watched.contains(_suggestions[index]);
 
           return ListTile(
             title: Text(
@@ -181,17 +181,17 @@ class _AnimeNamesState extends State<AnimeNames> {
               style: _biggerFont,
             ),
             trailing: Icon(
-              alreadySaved
+              alreadyWatched
                   ? Icons.check_box_outlined
                   : Icons.check_box_outline_blank_outlined,
-              color: alreadySaved
+              color: alreadyWatched
                   ? Color.fromARGB(255, 180, 99, 255)
                   : Color.fromARGB(255, 180, 99, 255),
-              semanticLabel: alreadySaved ? 'Remove from watched' : 'Watched',
+              semanticLabel: alreadyWatched ? 'Remove from watched' : 'Watched',
             ),
             onTap: () {
               setState(() {
-                if (alreadySaved) {
+                if (alreadyWatched) {
                   _watched.remove(_suggestions[index]);
                 } else {
                   _watched.add(_suggestions[index]);

@@ -1,9 +1,10 @@
-import 'dart:ui';
-
+import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -39,9 +40,10 @@ class AnimeNames extends StatefulWidget {
 }
 
 class _AnimeNamesState extends State<AnimeNames> {
-  final _suggestions = <String>[];
-  final _watched = <String>{};
   final _biggerFont = const TextStyle(fontSize: 20);
+
+  final List<String> _suggestions = <String>[];
+  final Set<String> _watched = <String>{};
 
   List<String> generateAnimeNames() {
     List<String> allAnimeAvailable = [

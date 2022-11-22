@@ -1,12 +1,20 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:path_provider/path_provider.dart';
 
-void main() {
+final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+late bool firstTime;
+
+void main() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  firstTime = prefs.getBool('first_time') ?? true;
+
+  if (firstTime == true) {
+    prefs.setBool('first_time', false); /* first time */
+  }
+
   runApp(const MyApp());
 }
 
@@ -25,10 +33,10 @@ class MyApp extends StatelessWidget {
         home: AnimatedSplashScreen(
             duration: 1800,
             splash: Icons.airline_stops_sharp,
-            nextScreen: const Guide(),
+            nextScreen: firstTime ? const Guide() : const AnimeNames(),
             splashTransition: SplashTransition.rotationTransition,
             pageTransitionType: PageTransitionType.fade,
-            backgroundColor: Color.fromARGB(255, 180, 99, 255)));
+            backgroundColor: const Color.fromARGB(255, 180, 99, 255)));
   }
 }
 
@@ -43,7 +51,7 @@ class _AnimeNamesState extends State<AnimeNames> {
   final _biggerFont = const TextStyle(fontSize: 20);
 
   final List<String> _suggestions = <String>[];
-  final Set<String> _watched = <String>{};
+  final List<String> _watched = <String>[];
 
   List<String> generateAnimeNames() {
     List<String> allAnimeAvailable = [
@@ -151,6 +159,27 @@ class _AnimeNamesState extends State<AnimeNames> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    initAsync();
+  }
+
+  void initAsync() async {
+    final SharedPreferences prefs = await _prefs;
+
+    final List<String> alreadyWatched =
+        prefs.getStringList("already watched") ?? [];
+
+    _watched.addAll(alreadyWatched);
+  }
+
+  void setStringList(List<String> list) async {
+    final SharedPreferences prefs = await _prefs;
+
+    prefs.setStringList("already watched", list);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -185,8 +214,8 @@ class _AnimeNamesState extends State<AnimeNames> {
                   ? Icons.check_box_outlined
                   : Icons.check_box_outline_blank_outlined,
               color: alreadyWatched
-                  ? Color.fromARGB(255, 180, 99, 255)
-                  : Color.fromARGB(255, 180, 99, 255),
+                  ? const Color.fromARGB(255, 180, 99, 255)
+                  : const Color.fromARGB(255, 180, 99, 255),
               semanticLabel: alreadyWatched ? 'Remove from watched' : 'Watched',
             ),
             onTap: () {
@@ -196,6 +225,7 @@ class _AnimeNamesState extends State<AnimeNames> {
                 } else {
                   _watched.add(_suggestions[index]);
                 }
+                setStringList(_watched);
               });
             },
           );

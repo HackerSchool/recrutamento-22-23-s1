@@ -9,9 +9,7 @@ void main() {
   runApp(const MyApp());
 }
 
-
 CalendarFormat _calendarFormat = CalendarFormat.month;
-
 
 //Event Class
 class DateEvents {
@@ -94,12 +92,11 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _reminders = true;
 
   Map<String, Color?> eventTypeColor = {
-    "Event": Colors.red[300],
-    "Reminder": Colors.orange[200],
-    "Task": Colors.blue[300]
+    "Event": Colors.green,
+    "Reminder": const Color.fromRGBO(33, 53, 2, 1.0),
+    "Task": const Color.fromRGBO(2, 82, 92, 1)
   };
 
-  
   Future<void> prefsData() async {
     prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -140,7 +137,6 @@ class _MyHomePageState extends State<MyHomePage> {
     prefsData();
   }
 
-
   List<DateEvents> _getEventsForDay(DateTime day) {
     var e = _eventsMap[day] ?? [];
     List<DateEvents> eventList = [];
@@ -171,7 +167,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 context: context,
                 builder: (context) {
                   return AlertDialog(
-                    content: Text(prefs!.getString("events").toString()),
+                    content: const Text(
+                        "Welcome! This calendar is my app for the AppDev Project.\n\n In this app, you can add events to a determined day and give them a title, a type and details, as usual in your typical calendar. To do that just click on the plus sign in the bottom right of the app, there you'll have more instructions!\n\n If you click on the three bars on the left, a sidebar menu will open and there you can choose your calendar display. Besides that you'll also be able to choose what type of events will appear on the calendar!"),
                     actions: [
                       TextButton(
                           onPressed: () {
@@ -235,7 +232,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   _focusedDay = focusedDay;
                 },
               )),
-              //All events containers 
+          //All events containers
           ..._getEventsForDay(_selectedDay).map(
             (event) => Container(
               padding: const EdgeInsets.all(10),
@@ -263,8 +260,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     color: Colors.white,
                   ),
                 ),
-                title: Text(event.title),
-                subtitle: Text(event.details),
+                title: Text(
+                  event.title,
+                  style: const TextStyle(fontSize: 20, color: Colors.white),
+                ),
+                subtitle: Text(event.details, style:const TextStyle(color: Colors.white)),
               ),
             ),
           )
@@ -325,7 +325,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   CheckboxListTile(
                     title: const Text("Events"),
                     value: _events,
-                    activeColor: Colors.red[300],
+                    activeColor: eventTypeColor["Event"],
                     onChanged: (bool? value) {
                       setState(() {
                         _events = value ?? _events;
@@ -335,7 +335,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   CheckboxListTile(
                     title: const Text("Tasks"),
                     value: _tasks,
-                    activeColor: Colors.blue[300],
+                    activeColor: eventTypeColor["Task"],
                     onChanged: (bool? value) {
                       setState(() {
                         _tasks = value ?? _tasks;
@@ -345,7 +345,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   CheckboxListTile(
                     title: const Text("Reminders"),
                     value: _reminders,
-                    activeColor: Colors.orange[200],
+                    activeColor: eventTypeColor["Reminder"],
                     onChanged: (bool? value) {
                       setState(() {
                         _reminders = value ?? _reminders;
@@ -379,6 +379,9 @@ class _AddEventPage extends State<AddEventPage> {
   void _sendDataBack(BuildContext context) {
     String title = titleController.text;
     String details = detailController.text;
+    if (details == "") {
+      details = "...";
+    }
     final event = DateEvents(title, details, _eventType);
     Navigator.pop(context, event);
   }

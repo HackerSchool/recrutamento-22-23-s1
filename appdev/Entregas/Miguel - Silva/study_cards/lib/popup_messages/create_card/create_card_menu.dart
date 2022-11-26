@@ -1,0 +1,55 @@
+import 'dart:ffi';
+import 'package:flutter/material.dart';
+
+import 'create_form.dart';
+
+class CreateCardMenu {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String formQuestion = "";
+  String formAnswer = "";
+
+  Void? changeCreateCardMenuVariables({required String formQuestion, required String formAnswer}) {
+    //Sempre q o user escrever algo isto executa. o child envia para o parent a cada alteração = pouco efeciente
+    // o ideal era ser o parent a ir buscar ao child só quando se clicasse no butão add
+    this.formQuestion = formQuestion;
+    this.formAnswer = formAnswer;
+    return null;
+  }
+
+  Future<void> createCardMenu(BuildContext context, Future<void> Function({required String question, required String answer, required bool favorite}) addCard) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          //actionsOverflowAlignment: OverflowBarAlignment.center,
+          title: const Text('Add new study card:'),
+          content: CreateForm(formKey: _formKey, changeCreateCardMenuVariables: changeCreateCardMenuVariables),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Add'),
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  // Process data.
+                  addCard(question: formQuestion, answer: formAnswer, favorite: false);
+                  Navigator.of(context).pop();
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+}

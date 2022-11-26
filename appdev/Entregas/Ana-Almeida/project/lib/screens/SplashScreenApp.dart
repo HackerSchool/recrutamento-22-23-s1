@@ -24,6 +24,7 @@ class SplashScreenState extends State<SplashScreenApp> {
     return Container(
         color: AppColor.primary,
         // child: FlutterLogo(size: MediaQuery.of(context).size.height)
-        child: Image.asset('icon/icon.png'));
+        child: Image.asset('assets/icon.png'),
+      );
   }
 }

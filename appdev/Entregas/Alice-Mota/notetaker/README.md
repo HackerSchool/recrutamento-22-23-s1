@@ -1,0 +1,1 @@
+Simple app that allows thee user to create, edit, save and delete notes.

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -12,24 +11,33 @@ void main() {
 CalendarFormat _calendarFormat = CalendarFormat.month;
 
 //Event Class
+@JsonSerializable()
 class DateEvents {
   String title;
   String details;
   String type;
 
-  DateEvents(this.title, this.details, this.type);
+  DateEvents({required this.title, required this.details, required this.type});
+
+  factory DateEvents.fromJson(dynamic json) {
+    return DateEvents(
+        title: json['title'] as String,
+        details: json['details'] as String,
+        type: json['type'] as String);
+  }
+
+  Map toJson() => {
+        'title': title,
+        'details': details,
+        'type': type,
+      };
 }
 
 //Encode Map of Events to JSON
 Map<String, dynamic> encodeMap(Map<DateTime, List<DateEvents>> map) {
   Map<String, dynamic> newMap = {};
   map.forEach((key1, value1) {
-    map[key1]?.forEach((key2) {
-      newMap[key1.toString()]?[identityHashCode(key2)]?["title"] = key2.title;
-      newMap[key1.toString()]?[identityHashCode(key2)]?["details"] =
-          key2.details;
-      newMap[key1.toString()]?[identityHashCode(key2)]?["type"] = key2.type;
-    });
+    newMap[key1.toString()] = jsonEncode(map[key1]);
   });
   return newMap;
 }
@@ -38,19 +46,9 @@ Map<String, dynamic> encodeMap(Map<DateTime, List<DateEvents>> map) {
 Map<DateTime, List<DateEvents>> decodeMap(Map<String, dynamic> map) {
   Map<DateTime, List<DateEvents>> newMap = {};
   map.forEach((key1, value1) {
-    map[key1]?.forEach((key2, value2) {
-      if (newMap[key1] == null) {
-        newMap[DateTime.parse(key1)] = [
-          DateEvents(map[key1]![key2]!["title"]!, map[key1]![key2]!["details"]!,
-              map[key1]![key2]!["type"]!)
-        ];
-      } else {
-        newMap[DateTime.parse(key1)]!.add(DateEvents(
-            map[key1]![key2]!["title"]!,
-            map[key1]![key2]!["details"]!,
-            map[key1]![key2]!["type"]!));
-      }
-    });
+    var eventsJson = jsonDecode(value1) as List;
+    newMap[DateTime.parse(key1)] =
+        eventsJson.map((event) => DateEvents.fromJson(event)).toList();
   });
   return newMap;
 }
@@ -61,6 +59,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'HS Calendar',
       theme: ThemeData(
         primarySwatch: Colors.green,
@@ -80,7 +79,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  SharedPreferences? prefs;
   DateTime _focusedDay = DateTime.now();
   late DateTime _selectedDay;
   late final ValueNotifier<List<DateEvents>> _selectedEvents;
@@ -98,10 +96,10 @@ class _MyHomePageState extends State<MyHomePage> {
   };
 
   Future<void> prefsData() async {
-    prefs = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _eventsMap = Map<DateTime, List<DateEvents>>.from(
-          decodeMap(json.decode(prefs?.getString("events") ?? "{}")));
+          decodeMap(json.decode(prefs.getString("events") ?? "{}")));
     });
   }
 
@@ -124,9 +122,8 @@ class _MyHomePageState extends State<MyHomePage> {
         _eventsMap[_selectedDay] = [result];
       });
     }
-    setState(() {
-      prefs?.setString("events", json.encode(encodeMap(_eventsMap)));
-    });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("events", json.encode(encodeMap(_eventsMap)));
   }
 
   @override
@@ -148,7 +145,6 @@ class _MyHomePageState extends State<MyHomePage> {
       } else if ((e[i].type == "Reminder") & (_reminders)) {
         eventList.add(e[i]);
       }
-      ;
     }
     return eventList;
   }
@@ -242,12 +238,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     Icons.clear_outlined,
                     color: Colors.white,
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     setState(() {
                       _eventsMap[_selectedDay]!.remove(event);
-                      prefs?.setString(
-                          "events", json.encode(encodeMap(_eventsMap)));
                     });
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    await prefs.setString(
+                        "events", json.encode(encodeMap(_eventsMap)));
                   },
                 ),
                 shape: const RoundedRectangleBorder(
@@ -264,7 +262,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   event.title,
                   style: const TextStyle(fontSize: 20, color: Colors.white),
                 ),
-                subtitle: Text(event.details, style:const TextStyle(color: Colors.white)),
+                subtitle: Text(event.details,
+                    style: const TextStyle(color: Colors.white)),
               ),
             ),
           )
@@ -382,7 +381,7 @@ class _AddEventPage extends State<AddEventPage> {
     if (details == "") {
       details = "...";
     }
-    final event = DateEvents(title, details, _eventType);
+    final event = DateEvents(title: title, details: details, type: _eventType);
     Navigator.pop(context, event);
   }
 
